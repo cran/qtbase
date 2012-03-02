@@ -1,0 +1,3 @@
+Dynamic bindings to the Qt library for calling Qt
+methods and extending Qt clases from R. Other packages build upon qtbase 
+to provide special-purpose high-level interfaces to specific parts of Qt.

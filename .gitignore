@@ -1,0 +1,17 @@
+/inst/local
+/kdebindings-build
+/src-build
+/src/qtbase.so
+/inst/qdoc/images
+/inst/qdoc/.Rhistory
+/inst/qdoc/classic.css
+/inst/qdoc/qt.qhp
+/R/.Rhistory
+*~
+/inst/papers/jss-2010/.emacs.desktop
+/inst/qdoc/links.rda
+/src/.Rhistory
+/demo/.Rhistory
+/inst/doc/.Rhistory
+/man/.Rhistory
+/inst/doc/qtbase.tex
