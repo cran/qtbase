@@ -133,7 +133,7 @@ SmokeObject * SmokeObject::fromSexp(SEXP sexp)
 
 SmokeObject::SmokeObject(void *ptr, const Class *klass, bool allocated)
   : _ptr(ptr), _klass(klass), _allocated(allocated), _sexp(NULL),
-    _internalTable(NULL), _fieldEnv(NULL)
+    _fieldEnv(NULL)
 {
 }
 
@@ -177,12 +177,14 @@ void SmokeObject::invalidateSexp() {
   maybeDestroy();
 }
 
-void SmokeObject::invalidateInternalTable() {
+void SmokeObject::invalidateInternalTable(SEXP sexp) {
 #ifdef MEM_DEBUG
-  qDebug("%p: invalidating internal table %p", this, _internalTable);
+  qDebug("%p: invalidating internal table %p", this, sexp);
 #endif
-  _internalTable = NULL;
-  maybeDestroy();
+  _internalTables.remove(sexp);
+  if (_internalTables.isEmpty()) {
+    maybeDestroy();
+  }
 }
 
 void SmokeObject::castSexp(SEXP sexp) {
@@ -240,7 +242,7 @@ SmokeModule *SmokeObject::module() const {
 bool SmokeObject::memoryIsOwned() const {
   // NOTE: calling the module's memoryIsOwned() might resurrect sexps;
   // if so, they become orphans
-  bool owned = _sexp || _internalTable;
+  bool owned = _sexp || !_internalTables.isEmpty();
   if (!owned) {
     owned = module()->memoryIsOwned(this);
 #ifdef MEM_DEBUG
@@ -249,8 +251,8 @@ bool SmokeObject::memoryIsOwned() const {
 #endif
   }
 #ifdef MEM_DEBUG
-  else qDebug("%p: memory is owned by R, sexp: %p, table: %p", this, _sexp,
-                _internalTable);
+  else qDebug("%p: memory is owned by R, sexp: %p, %d tables", this, _sexp,
+                _internalTables.size());
 #endif
   return owned;
 }
@@ -394,14 +396,14 @@ SEXP SmokeObject::internalSexp(SEXP env) {
 }
 
 SEXP SmokeObject::internalTable() {
-  if (!_internalTable) {
-    InstanceObjectTable *table = _klass->createObjectTable(this);
-    table->setInternal(true);
-    _internalTable = table->sexp();
+  SEXP _internalTable;
+  InstanceObjectTable *table = _klass->createObjectTable(this);
+  table->setInternal(true);
+  _internalTable = table->sexp();
+  _internalTables.insert(_internalTable);
 #ifdef MEM_DEBUG
     qDebug("%p: creating internal table %p", this, _internalTable);
 #endif
-  }
   return _internalTable;
 }
 
@@ -417,6 +419,18 @@ void SmokeObject::orphanTable(SEXP sexp) const {
   InstanceObjectTable *table = 
     static_cast<InstanceObjectTable *>(ObjectTable::fromSexp(sexp));
   table->setInstance(NULL);
+}
+
+void SmokeObject::orphanSexp() {
+  SEXP old_classes = getAttrib(_sexp, R_ClassSymbol);
+  SEXP new_classes;
+  PROTECT(new_classes = allocVector(STRSXP, length(old_classes) + 1));
+  SET_STRING_ELT(new_classes, 0, mkChar("RQtInvalid"));
+  for (int i = 0; i < length(old_classes); i++)
+    SET_STRING_ELT(new_classes, i + 1, STRING_ELT(old_classes, i));
+  setAttrib(_sexp, R_ClassSymbol, new_classes);
+  UNPROTECT(1);
+  orphanTable(HASHTAB(_sexp));
 }
 
 SmokeObject *SmokeObject::convertImplicitly(const SmokeType &type) const {
@@ -442,13 +456,14 @@ SmokeObject::~SmokeObject() {
 #ifdef MEM_DEBUG
     qDebug("%p: orphaned sexp %p", this, _sexp);
 #endif
-    orphanTable(HASHTAB(_sexp));
+    orphanSexp();
   }
-  if (_internalTable) {
+  for (QSet<SEXP>::const_iterator it = _internalTables.begin();
+       it != _internalTables.end(); ++it) {
 #ifdef MEM_DEBUG
-    qDebug("%p: orphaned internal table %p", this, _internalTable);
+    qDebug("%p: orphaned internal table %p", this, *it);
 #endif
-    orphanTable(_internalTable);
+    orphanTable(*it);
   }
   if (_fieldEnv)
     R_ReleaseObject(_fieldEnv);

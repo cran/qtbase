@@ -2,22 +2,23 @@ cmake_minimum_required(VERSION 2.8.1)
 
 project(qtbase)
 
-find_package(Qt4 4.0.0 COMPONENTS QtCore QtGui REQUIRED)
+find_package(Qt4 4.0.0 REQUIRED COMPONENTS QtCore QtGui)
 
-find_package(Qt4 4.0.0 COMPONENTS QtCore QtGui QtXml QtXmlPatterns
-  QtNetwork QtOpenGL QtSql QtSvg QtDBus QtScript QtWebkit
-  QtTest QtHelp QtMultimedia QtDeclarative QtUiTools)
+if(APPLE) # No QtDBus in Mac binaries
+find_package(Qt4 4.0.0 COMPONENTS QtXml QtXmlPatterns QtNetwork
+             QtOpenGL QtSql QtSvg QtScript QtWebkit QtTest
+             QtHelp QtMultimedia QtDeclarative QtUiTools)
+else(APPLE)
+find_package(Qt4 4.0.0 COMPONENTS QtXml QtXmlPatterns QtNetwork
+             QtOpenGL QtSql QtSvg QtDBus QtScript QtWebkit QtTest
+             QtHelp QtMultimedia QtDeclarative QtUiTools)
+endif(APPLE)
 
 ## FindQt4 does not add the include directory for OpenGL
 find_package(OpenGL)
 if(OPENGL_FOUND)
 include_directories(${OPENGL_INCLUDE_DIR})
 endif(OPENGL_FOUND)
-
-## QtUiTools not installed as a framework on OS X
-if(APPLE)
-set(QT_USE_QTUITOOLS FALSE)
-endif(APPLE)
 
 ## QtUiTools not linked correctly on Windows (_personality_v0 missing symbol)
 if(WIN32)
@@ -41,14 +42,20 @@ set(qtbase_LIB_SRCS init.cpp EventLoop.cpp convert.cpp
    InstanceObjectTable.cpp smoke.cpp DataFrameModel.cpp
    RTextFormattingDelegate.cpp)
    
-QT4_WRAP_CPP ( qtbase_MOC_FILES EventLoop.hpp )
+QT4_WRAP_CPP ( qtbase_MOC_FILES EventLoop.hpp DataFrameModel.hpp )
 
 if(WIN32) # Toughest Win32 part: generating the defs file for the DLL
 foreach(qtbase_lib_src ${qtbase_LIB_SRCS})
   list(APPEND qtbase_LIB_OBJS "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/qtbase.dir/${qtbase_lib_src}${CMAKE_CXX_OUTPUT_EXTENSION}")
 endforeach(qtbase_lib_src ${qtbase_LIB_SRCS})
+if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+  set(SYMPAT "'s/^.* [BCDRT] _/ /p'")
+else ()
+  set(SYMPAT "/^[^ ]* [T|C|B] /s/^[^ ]* [T|C|B] / /p")
+endif()
 add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/qtbase.def 
-                   COMMAND sh ARGS ${CMAKE_CURRENT_SOURCE_DIR}/mkdef.sh
+                   COMMAND sh
+                   ARGS ${CMAKE_CURRENT_SOURCE_DIR}/mkdef.sh ${SYMPAT}
                    DEPENDS ${qtbase_LIB_OBJS}) 
 SET(CMAKE_LINK_DEF_FILE_FLAG "qtbase.def ") # space needs to be there
 add_library(qtbase SHARED qtbase.def ${qtbase_LIB_SRCS} ${qtbase_MOC_FILES})
@@ -68,4 +75,6 @@ else(NOT WIN32)
 install(TARGETS qtbase RUNTIME DESTINATION . )
 endif(NOT WIN32)
 
+INCLUDE(CMakeForceCompiler)
+CMAKE_FORCE_CXX_COMPILER(${R_CXX} R_CXX)
 
