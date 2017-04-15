@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8.1)
 
+find_program(CMAKE_CXX_COMPILER ${R_CXX})
+
 project(qtbase)
 
 find_package(Qt4 4.0.0 REQUIRED COMPONENTS QtCore QtGui)
@@ -29,7 +31,7 @@ include(${QT_USE_FILE})
 
 include_directories( ../inst/local/include ${R_INCLUDES} )
 
-link_directories( ../kdebindings-build/smoke/qt )
+link_directories( ../tools/kdebindings-build/smoke/qt )
 
 set(qtbase_LIB_SRCS init.cpp EventLoop.cpp convert.cpp
    wrap.cpp metaobject.cpp connect.cpp invoke.cpp dynamicqobject.cpp
@@ -74,7 +76,3 @@ install(TARGETS qtbase LIBRARY DESTINATION . )
 else(NOT WIN32)
 install(TARGETS qtbase RUNTIME DESTINATION . )
 endif(NOT WIN32)
-
-INCLUDE(CMakeForceCompiler)
-CMAKE_FORCE_CXX_COMPILER(${R_CXX} R_CXX)
-

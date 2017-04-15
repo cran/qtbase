@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
+find_program(CMAKE_CXX_COMPILER ${R_CXX})
+
 project(kdebindings)
 
 find_package(Qt4 4.0.0 REQUIRED COMPONENTS QtCore QtGui)
@@ -29,6 +31,3 @@ include(${QT_USE_FILE})
 
 add_subdirectory(generator)
 add_subdirectory(smoke)
-
-INCLUDE(CMakeForceCompiler)
-CMAKE_FORCE_CXX_COMPILER(${R_CXX} R_CXX)
