@@ -1,4 +1,4 @@
-97bca6568d61fc059683f4e4fd952740 *DESCRIPTION
+214663c24367a077dc64f351be163ae3 *DESCRIPTION
 bee43b303d60447a0cd07ca49fa06552 *INSTALL
 8f1316ccefa3b2e8c35cc6d803a80529 *NAMESPACE
 f94cfa1165f6fabbef4a849213ea09ab *R/class.R
@@ -23,7 +23,7 @@ f7e9a7c132b285c965714df2e7e4826e *R/widget.R
 adc54c679b5d136652507db9cf559080 *R/zzz.R
 fc4d4bd856ef66c2240f43b52c527e39 *README
 109dcc052b8f94ed36340e2beb0d1bfb *TODO
-ce318cb719424ace7d148b04937b397b *build/vignette.rds
+ab1183d553bcb5cea2877f743c690f96 *build/vignette.rds
 cc00541fdfb52a809483ac489ec7c376 *demo/00Index
 8ce4edeb6aa940c2aeb1afb915611fb3 *demo/addressBook.R
 52598cb38b270a318654e6350bcb375f *demo/analogClock.R
@@ -39,7 +39,7 @@ a8510269972a24a77fae636c009aad50 *demo/textEdit.R
 1c6280d39563bc64501bb725ad66cf51 *inst/NOTES
 6c9fd4398c6ef0088e73344f2dc3be19 *inst/doc/qtbase.R
 b58bc47fd69caa77d092c963c77b0611 *inst/doc/qtbase.Rnw
-762f17cfd0b8c2e00af673c6e07391fd *inst/doc/qtbase.pdf
+918ac1263115dc9bab504f7c058d0b32 *inst/doc/qtbase.pdf
 bca2e794c85e9871a409de8cb3ff5991 *inst/images/background.png
 eab0e18c57dd7e8165b03e1a3ee5f3f3 *inst/images/banner.png
 650656a0bcc874598bd5fab98fc9b5bd *inst/images/logo1.png
@@ -88,9 +88,9 @@ b9939f4a63f8e0d758355895615bf8df *src/Class.cpp
 f52c720f69d29af73cd653a0b09d8d46 *src/ClassFactory.cpp
 04d99c2c83fb4caf7f6a8aa963edbec8 *src/ClassFactory.hpp
 2b09e92d30f60043faecb2f86abe1d14 *src/DataFrameModel.cpp
-01140c713552195c87ef624c007b2b56 *src/DataFrameModel.hpp
+836208604788982a1257a7bb88560d90 *src/DataFrameModel.hpp
 bce0a856fbeb1b81f9633b148125edad *src/DynamicBinding.cpp
-1d6dff97f0e88456fac4d22e19b33569 *src/DynamicBinding.hpp
+ea0a943a768de156c08f882836e1e24e *src/DynamicBinding.hpp
 ffb840ed98cc99e033bd7d0ffabe2770 *src/EventLoop.cpp
 2765f5875d0470ef7138544fd813afb8 *src/EventLoop.hpp
 a85fe2a8bd151b397428d2bf42e291f4 *src/ForeignMethod.cpp
@@ -146,7 +146,7 @@ ef7693d63adf69dfdbda69b2d829af5b *src/SmokeObject.hpp
 57fe2c0f96c36fbb2964fc3fc5fa2e26 *src/TypeHandler.hpp
 c0b967ca10976fcd776622d5a74c3ff7 *src/classes.cpp
 c0463824dbb2e43106f1d0c71a054eee *src/connect.cpp
-469909b1200384c163dba1a8d6551002 *src/convert.cpp
+d85479c2deda695cbaf69a8c1467cf10 *src/convert.cpp
 0192eea7ff218e96ab03785c71c7acd2 *src/convert.hpp
 d75ea48afe61a3f1d9a72acdf0a22bc3 *src/dynamicqobject.cpp
 277852dc5166dca2c714f26849058345 *src/dynamicqobject.h
@@ -158,7 +158,7 @@ c90a0c7e2de280c92292c3e2a96a707e *src/init.cpp
 86812006b6ebb0eec643adcaad219fc2 *src/replace.sh
 593cf3356cbf714e53a3d013d2d500b1 *src/smoke.cpp
 2b2c1cc1ffc70bcbdb10e1cce3f61a05 *src/smoke.hpp
-5630cbfa9861035897bf388b22731eb7 *src/symbols.rds
+2d56821b3d70606241c6ef8386232e48 *src/symbols.rds
 4cd4a2bac2f1a14265d4b7cfbbe56221 *src/type-handlers.cpp
 6e560d80b919ebf9f7d6bcb11d0908e1 *src/type-handlers.hpp
 d1ec27509c34705028a79c1f5c55048f *src/wrap.cpp
